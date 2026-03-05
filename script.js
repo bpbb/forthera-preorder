@@ -215,9 +215,9 @@ function updateProgress(step) {
 // STEP RENDERERS
 // ═══════════════════════════════════════════════════════════════════
 
-function renderStep(n) {
+function renderStep(n, scrollToTop = false) {
   const app = document.getElementById('app');
-  window.scrollTo(0, 0);
+  if (scrollToTop) window.scrollTo(0, 0);
   switch (n) {
     case 1: app.innerHTML = renderInfo(); break;
     case 2: app.innerHTML = renderColorGrid('rope', ROPE_COLORS, 'Choose Your Rope Color', '1 rope is included in the Starter Pack. Select one.', state.rope); break;
@@ -787,13 +787,11 @@ function renderContact() {
         <label>Contact <span style="font-weight:400;color:#888">(at least one required)</span></label>
         <div class="contact-row">
           <div class="contact-field">
-            <span class="contact-icon">📸</span>
             <span class="contact-label">Instagram</span>
             <input type="text" id="inp-ig" value="${escHtml(state.buyerIG)}" placeholder="@username" oninput="state.buyerIG=this.value">
           </div>
           <div class="contact-or">or</div>
           <div class="contact-field">
-            <span class="contact-icon">💬</span>
             <span class="contact-label">LINE ID</span>
             <input type="text" id="inp-line" value="${escHtml(state.buyerLine)}" placeholder="LINE ID" oninput="state.buyerLine=this.value">
           </div>
@@ -930,12 +928,12 @@ function updateNav(step) {
 function prevStep() {
   if (state.step === 4 && state.lSubStep === 1) {
     state.lSubStep = 0;
-    renderStep(4);
+    renderStep(4, true);
     return;
   }
   if (state.step <= 1) return;
   state.step--;
-  renderStep(state.step);
+  renderStep(state.step, true);
 }
 
 function nextStep() {
@@ -948,13 +946,13 @@ function nextStep() {
     if (lc < 2) { showToast(`At least 2 letters A–Z required (currently ${lc}).`); return; }
     if (state.lItems.length < 2) { showToast('Select at least 2 items total.'); return; }
     state.lSubStep = 1;
-    renderStep(4);
+    renderStep(4, true);
     return;
   }
 
   state.step++;
   if (state.step === 4) state.lSubStep = 0;
-  renderStep(state.step);
+  renderStep(state.step, true);
 }
 
 function validateStep(step) {
