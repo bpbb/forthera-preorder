@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forthera — Custom Keychain Pre-Order</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Forthera</h1>
+    <p class="subtitle">Custom Keychain Pre-Order</p>
+  </header>
+
+  <!-- Progress bar -->
+  <div id="progress-wrap">
+    <div id="progress-bar"></div>
+    <div id="step-title"></div>
+  </div>
+
+  <!-- Step content -->
+  <main id="app"></main>
+
+  <!-- Navigation -->
+  <div id="nav-row">
+    <button id="btn-back" onclick="prevStep()">← Back</button>
+    <span id="step-counter"></span>
+    <button id="btn-next" onclick="nextStep()">Next →</button>
+  </div>
+
+  <!-- Error toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <footer>
+    <p>© 2026 Forthera &nbsp;|&nbsp; Custom Keychain Pre-Order</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
