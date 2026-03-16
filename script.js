@@ -22,109 +22,355 @@ const STEP_LABELS = ['Info', 'Rope', 'Ring', 'Letters', 'S Decos', 'Recycled KC'
 // PRODUCT DATA
 // ═══════════════════════════════════════════════════════════════════
 
-const ROPE_EMOJIS  = ['🔴','🟠','🟡','🟢','🔵','🟣','⚫','⚪','🟤','🌸'];
-const CLASP_EMOJIS = ['⚪','🔘','🔵','🟣','🟡','🟠','🔴','🟤','🔲','🔷'];
-
+// ── Ropes: no images yet, emoji fallback ──────────────────────────
+const ROPE_EMOJIS = ['🔴','🟠','🟡','🟢','🔵','🟣','⚫','⚪','🟤','🌸'];
 const ROPE_COLORS = Array.from({ length: 10 }, (_, i) => ({
   id: `rope_${i + 1}`,
   name: `Color ${i + 1}`,
-  image: `images/rope/${String(i + 1).padStart(2, '0')}.jpg`,
+  image: '',
   emoji: ROPE_EMOJIS[i],
   stock: 15,
 }));
 
-const CLASP_COLORS = Array.from({ length: 10 }, (_, i) => ({
+// ── Clasp rings: 9 images from images/rings/ ──────────────────────
+const CLASP_EMOJIS = ['⚪','🔘','🔵','🟣','🟡','🟠','🔴','🟤','🔲'];
+const CLASP_FILES  = [
+  'IMG_8079','IMG_8080','IMG_8081','IMG_8082','IMG_8083',
+  'IMG_8084','IMG_8085','IMG_8086','IMG_8087',
+];
+const CLASP_COLORS = CLASP_FILES.map((file, i) => ({
   id: `clasp_${i + 1}`,
   name: `Color ${i + 1}`,
-  image: `images/clasp/${String(i + 1).padStart(2, '0')}.jpg`,
+  image: `images/rings/${file}.jpg`,
   emoji: CLASP_EMOJIS[i],
-  stock: 15,
+  stock: 10,
 }));
 
-// Letters A–Z, each with 6 color variants
-const LETTER_VARIANT_COLORS = ['Red', 'Blue', 'Yellow', 'White', 'Pink', 'Gold'];
-const L_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter => ({
-  id: `letter_${letter}`,
-  name: letter,
-  type: 'letter',
-  emoji: letter,
-  variants: LETTER_VARIANT_COLORS.map(color => ({
-    id: `${letter}_${color.toLowerCase()}`,
-    color,
-    image: `images/letters/${letter}_${color.toLowerCase()}.jpg`,
-    stock: 5,
-  })),
-}));
+// ── Letters A–Z: real images per letter, stock 7 per color ────────
+// Letters not listed below have no stock (show disabled)
+const LETTER_IMAGES = {
+  // each entry: { file, stock }
+  A: [
+    { file: 'IMG_8002', stock: 10 },
+    { file: 'IMG_8003', stock: 1 },
+    { file: 'IMG_8004', stock: 3 },
+    { file: 'IMG_8005', stock: 2 },
+    { file: 'IMG_8006', stock: 2 },
+    { file: 'IMG_8007', stock: 3 },
+    { file: 'IMG_8008', stock: 2 },
+    { file: 'IMG_8009', stock: 2 },
+  ],
+  B: [
+    { file: 'IMG_8010', stock: 10 },
+    { file: 'IMG_8011', stock: 1 },
+    { file: 'IMG_8012', stock: 1 },
+    { file: 'IMG_8013', stock: 2 },
+  ],
+  C: [
+    { file: 'IMG_7913', stock: 1 },
+    { file: 'IMG_7914', stock: 1 },
+    { file: 'IMG_7915', stock: 1 },
+    { file: 'IMG_7916', stock: 1 },
+  ],
+  D: [
+    { file: 'IMG_7924', stock: 2 },
+  ],
+  E: [
+    { file: 'IMG_8014', stock: 2 },
+    { file: 'IMG_8016', stock: 1 },
+    { file: 'IMG_8017', stock: 9 },
+    { file: 'IMG_8018', stock: 4 },
+    { file: 'IMG_8019', stock: 3 },
+    { file: 'IMG_8020', stock: 1 },
+    { file: 'IMG_8021', stock: 3 },
+    { file: 'IMG_8022', stock: 3 },
+  ],
+  F: [
+    { file: 'IMG_7983', stock: 1 },
+    { file: 'IMG_7984', stock: 1 },
+    { file: 'IMG_7985', stock: 1 },
+    { file: 'IMG_7986', stock: 1 },
+  ],
+  G: [
+    { file: 'IMG_7987', stock: 1 },
+    { file: 'IMG_7988', stock: 1 },
+    { file: 'IMG_7989', stock: 2 },
+    { file: 'IMG_7990', stock: 1 },
+    { file: 'IMG_7991', stock: 1 },
+  ],
+  H: [
+    { file: 'IMG_7912', stock: 1 },
+  ],
+  I: [
+    { file: 'IMG_8023', stock: 1 },
+    { file: 'IMG_8024', stock: 3 },
+    { file: 'IMG_8025', stock: 5 },
+    { file: 'IMG_8026', stock: 2 },
+    { file: 'IMG_8027', stock: 3 },
+    { file: 'IMG_8028', stock: 2 },
+    { file: 'IMG_8029', stock: 1 },
+    { file: 'IMG_8030', stock: 3 },
+    { file: 'IMG_8031', stock: 1 },
+    { file: 'IMG_8032', stock: 1 },
+  ],
+  J: [
+    { file: 'IMG_7925', stock: 1 },
+    { file: 'IMG_7926', stock: 2 },
+  ],
+  K: [
+    { file: 'IMG_7992', stock: 2 },
+    { file: 'IMG_7993', stock: 1 },
+    { file: 'IMG_7994', stock: 2 },
+    { file: 'IMG_7995', stock: 1 },
+  ],
+  L: [
+    { file: 'IMG_7996', stock: 3 },
+    { file: 'IMG_7997', stock: 1 },
+    { file: 'IMG_7998', stock: 1 },
+    { file: 'IMG_7999', stock: 1 },
+    { file: 'IMG_8001', stock: 1 },
+  ],
+  M: [
+    { file: 'IMG_8033', stock: 1 },
+    { file: 'IMG_8034', stock: 2 },
+    { file: 'IMG_8035', stock: 1 },
+    { file: 'IMG_8036', stock: 1 },
+    { file: 'IMG_8037', stock: 2 },
+    { file: 'IMG_8038', stock: 3 },
+    { file: 'IMG_8039', stock: 3 },
+    { file: 'IMG_8040', stock: 1 },
+  ],
+  N: [
+    { file: 'IMG_8041', stock: 2 },
+    { file: 'IMG_8042', stock: 3 },
+    { file: 'IMG_8043', stock: 4 },
+    { file: 'IMG_8044', stock: 1 },
+    { file: 'IMG_8045', stock: 3 },
+    { file: 'IMG_8046', stock: 1 },
+    { file: 'IMG_8047', stock: 3 },
+  ],
+  O: [
+    { file: 'IMG_7960', stock: 2 },
+    { file: 'IMG_7961', stock: 2 },
+    { file: 'IMG_7962', stock: 4 },
+    { file: 'IMG_7963', stock: 1 },
+    { file: 'IMG_7964', stock: 3 },
+    { file: 'IMG_7965', stock: 2 },
+    { file: 'IMG_7966', stock: 2 },
+  ],
+  P: [
+    { file: 'IMG_7953', stock: 1 },
+    { file: 'IMG_7954', stock: 2 },
+    { file: 'IMG_7955', stock: 2 },
+    { file: 'IMG_7956', stock: 1 },
+    { file: 'IMG_7957', stock: 3 },
+    { file: 'IMG_7958', stock: 2 },
+    { file: 'IMG_7959', stock: 2 },
+  ],
+  Q: [
+    { file: 'IMG_7927', stock: 1 },
+    { file: 'IMG_7928', stock: 2 },
+    { file: 'IMG_7929', stock: 2 },
+    { file: 'IMG_7930', stock: 1 },
+  ],
+  R: [
+    { file: 'IMG_7922', stock: 1 },
+    { file: 'IMG_7923', stock: 1 },
+  ],
+  S: [
+    { file: 'IMG_7976', stock: 3 },
+    { file: 'IMG_7977', stock: 3 },
+    { file: 'IMG_7978', stock: 2 },
+    { file: 'IMG_7979', stock: 2 },
+    { file: 'IMG_7980', stock: 1 },
+    { file: 'IMG_7981', stock: 1 },
+    { file: 'IMG_7982', stock: 2 },
+  ],
+  T: [
+    { file: 'IMG_7931', stock: 1 },
+    { file: 'IMG_7932', stock: 1 },
+    { file: 'IMG_7933', stock: 4 },
+    { file: 'IMG_7934', stock: 1 },
+    { file: 'IMG_7935', stock: 2 },
+    { file: 'IMG_7936', stock: 2 },
+    { file: 'IMG_7937', stock: 2 },
+  ],
+  U: [
+    { file: 'IMG_7967', stock: 3 },
+    { file: 'IMG_7968', stock: 2 },
+    { file: 'IMG_7969', stock: 2 },
+    { file: 'IMG_7970', stock: 1 },
+    { file: 'IMG_7972', stock: 2 },
+    { file: 'IMG_7973', stock: 2 },
+    { file: 'IMG_7974', stock: 1 },
+    { file: 'IMG_7975', stock: 1 },
+  ],
+  V: [
+    { file: 'IMG_7920', stock: 1 },
+    { file: 'IMG_7921', stock: 2 },
+  ],
+  W: [
+    { file: 'IMG_7945', stock: 1 },
+    { file: 'IMG_7947', stock: 1 },
+    { file: 'IMG_7948', stock: 3 },
+  ],
+  X: [
+    { file: 'IMG_7938', stock: 2 },
+    { file: 'IMG_7939', stock: 1 },
+    { file: 'IMG_7940', stock: 1 },
+    { file: 'IMG_7941', stock: 2 },
+    { file: 'IMG_7942', stock: 1 },
+    { file: 'IMG_7943', stock: 2 },
+    { file: 'IMG_7944', stock: 1 },
+  ],
+  Y: [
+    { file: 'IMG_7917', stock: 1 },
+    { file: 'IMG_7918', stock: 1 },
+  ],
+  Z: [
+    { file: 'IMG_7949', stock: 2 },
+    { file: 'IMG_7950', stock: 1 },
+    { file: 'IMG_7951', stock: 3 },
+    { file: 'IMG_7952', stock: 1 },
+  ],
+};
+const L_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter => {
+  const variants_data = LETTER_IMAGES[letter] || [];
+  const variants = variants_data.length > 0
+    ? variants_data.map((v, i) => ({
+        id: `letter_${letter}_${i + 1}`,
+        color: `Color ${i + 1}`,
+        image: `images/letters_7/${letter}/${v.file}.jpg`,
+        stock: v.stock,
+      }))
+    : [{ id: `letter_${letter}_1`, color: 'Color 1', image: '', stock: 0 }];
+  return { id: `letter_${letter}`, name: letter, type: 'letter', emoji: letter, variants };
+});
 
-// Special L-decorations
-const L_SPECIALS_RAW = [
-  { id: 'ldeco_star',   name: 'Star',   emoji: '⭐' },
-  { id: 'ldeco_heart',  name: 'Heart',  emoji: '❤️' },
-  { id: 'ldeco_crown',  name: 'Crown',  emoji: '👑' },
-  { id: 'ldeco_flower', name: 'Flower', emoji: '🌸' },
-  { id: 'ldeco_moon',   name: 'Moon',   emoji: '🌙' },
-];
-const L_SPECIALS = L_SPECIALS_RAW.map(item => ({
-  ...item,
+// ── L-Decorations: subfolders = designs, images within = colors ───
+const L_DECO_DATA = {
+  bells: {
+    name: 'Bells', emoji: '🔔',
+    variants: [
+      { file: 'IMG_8088', stock: 10 },
+      { file: 'IMG_8089', stock: 10 },
+      { file: 'IMG_8090', stock: 10 },
+      { file: 'IMG_8091', stock: 10 },
+      { file: 'IMG_8092', stock: 10 },
+      { file: 'IMG_8093', stock: 10 },
+      { file: 'IMG_8094', stock: 10 },
+      { file: 'IMG_8095', stock: 10 },
+    ],
+  },
+  bows: {
+    name: 'Bows', emoji: '🎀',
+    variants: [
+      { file: 'IMG_8096', stock: 2 },
+      { file: 'IMG_8097', stock: 3 },
+      { file: 'IMG_8098', stock: 2 },
+      { file: 'IMG_8099', stock: 1 },
+      { file: 'IMG_8100', stock: 1 },
+    ],
+  },
+  flowers: {
+    name: 'Flowers', emoji: '🌸',
+    variants: [
+      { file: 'IMG_8101', stock: 2 },
+      { file: 'IMG_8103', stock: 2 },
+      { file: 'IMG_8104', stock: 2 },
+      { file: 'IMG_8105', stock: 2 },
+      { file: 'IMG_8106', stock: 1 },
+    ],
+  },
+};
+const L_SPECIALS = Object.entries(L_DECO_DATA).map(([key, data]) => ({
+  id: `ldeco_${key}`,
+  name: data.name,
+  emoji: data.emoji,
   type: 'special',
-  variants: LETTER_VARIANT_COLORS.map(color => ({
-    id: `${item.id}_${color.toLowerCase()}`,
-    color,
-    image: `images/specials/${item.id.replace('ldeco_', '')}_${color.toLowerCase()}.jpg`,
-    stock: 5,
+  variants: data.variants.map((v, i) => ({
+    id: `ldeco_${key}_${i + 1}`,
+    color: `Color ${i + 1}`,
+    image: `images/large_decorations_7/${key}/${v.file}.jpg`,
+    stock: v.stock,
   })),
 }));
 
 const L_ITEMS = [...L_LETTERS, ...L_SPECIALS];
 
-// S-Decorations: 3 shapes × 6 colors = 18 items
-const S_SHAPES = [
-  { key: 'heart',  label: 'Heart ♥', emoji: '❤️' },
-  { key: 'star',   label: 'Star ★',  emoji: '⭐' },
-  { key: 'circle', label: 'Circle ●', emoji: '⚫' },
+// ── S-Decorations: 30 items from images/small_decorations_3/ ─────
+const S_DECO_FILES = [
+  'IMG_8048','IMG_8049','IMG_8050','IMG_8051','IMG_8052','IMG_8053',
+  'IMG_8054','IMG_8055','IMG_8056','IMG_8057','IMG_8058','IMG_8059',
+  'IMG_8060','IMG_8061','IMG_8062','IMG_8063','IMG_8064','IMG_8066',
+  'IMG_8067','IMG_8068','IMG_8069','IMG_8070','IMG_8071','IMG_8072',
+  'IMG_8073','IMG_8074','IMG_8075','IMG_8076','IMG_8077','IMG_8078',
 ];
-const S_COLOR_LIST = [
-  { name: 'Orange', hex: '#fb923c' },
-  { name: 'Purple', hex: '#a855f7' },
-  { name: 'Pink',   hex: '#f472b6' },
-  { name: 'Blue',   hex: '#60a5fa' },
-  { name: 'Green',  hex: '#4ade80' },
-  { name: 'White',  hex: '#f9fafb' },
+const S_DECO_EMOJIS = ['❤️','⭐','⚫','🔶','💜','🌸','💙','💚','🤍','🧡','❤️','⭐','⚫','🔶','💜','🌸','💙','💚','🤍','🧡','❤️','⭐','⚫','🔶','💜','🌸','💙','💚','🤍','🧡'];
+const S_DECO_STOCKS = [
+  20, 20, 20, 20, 20, 20, 20, 20,       // sdeco_1–8 (IMG_8048–8055)
+  30, 30, 30, 30, 30, 30, 30, 30, 30,   // sdeco_9–17 (IMG_8056–8064)
+  30, 30, 30, 30, 30,                    // sdeco_18–22 (IMG_8066–8070, skip 8065)
+  8, 14, 5, 8, 3, 6, 9, 7,              // sdeco_23–30 (IMG_8071–8078, hearts)
 ];
-const S_DECOS = [];
-S_SHAPES.forEach(shape => {
-  S_COLOR_LIST.forEach(color => {
-    S_DECOS.push({
-      id: `${shape.key}_${color.name.toLowerCase()}`,
-      name: `${color.name} ${shape.label}`,
-      shape: shape.label,
-      color: color.name,
-      emoji: shape.emoji,
-      colorHex: color.hex,
-      image: `images/s/${shape.key}_${color.name.toLowerCase()}.jpg`,
-      stock: 20,
-    });
-  });
-});
+const S_DECOS = S_DECO_FILES.map((file, i) => ({
+  id: `sdeco_${i + 1}`,
+  name: `S-Deco ${i + 1}`,
+  shape: `S-Deco ${i + 1}`,
+  color: '',
+  emoji: S_DECO_EMOJIS[i],
+  colorHex: '#c0d8f0',
+  image: `images/small_decorations_3/${file}.jpg`,
+  stock: S_DECO_STOCKS[i] ?? 0,
+}));
 
-// Mini keychains add-on (฿10 each)
-const SMALL_KC_EMOJIS = ['🔑', '🏅', '🎀', '⚡', '🌟'];
-const SMALL_KEYCHAINS = Array.from({ length: 5 }, (_, i) => ({
+// ── Mini keychains (฿10): 17 items from images/small_keychains_10/
+const SMALL_KC_FILES = [
+  'IMG_1570','IMG_1572','IMG_1573','IMG_1574','IMG_1575','IMG_1576','IMG_1577',
+  'IMG_1578','IMG_1579','IMG_1580','IMG_1581','IMG_1582','IMG_1583','IMG_1585',
+  'IMG_1586','IMG_1587',
+];
+const SMALL_KC_EMOJIS = ['🔑','🏅','🎀','⚡','🌟','🦋','✨','💎','🌈','🍀','🎵','🎯','🔮','🌺','🦄','💫'];
+const SMALL_KC_STOCKS = {
+  'IMG_1574': 3, 'IMG_1585': 3, 'IMG_1587': 3,
+  'IMG_1586': 2,
+  'IMG_1575': 1,
+};
+const SMALL_KEYCHAINS = SMALL_KC_FILES.map((file, i) => ({
   id: `sk_${i + 1}`,
   name: `Design ${i + 1}`,
-  image: `images/small_kc/${String(i + 1).padStart(2, '0')}.jpg`,
+  image: `images/small_keychains_10/${file}.jpg`,
   emoji: SMALL_KC_EMOJIS[i],
-  stock: 8,
+  stock: SMALL_KC_STOCKS[file] ?? 1,
   price: 10,
 }));
 
-// Recycled mini keychains (฿15 each, choose 1-2 colors)
-const RECYCLED_KC_EMOJIS = ['♻️', '🌿', '🌊', '🍃', '🌸', '🌈', '🦋', '🌻'];
-const RECYCLED_AVAILABLE_COLORS = ['Red', 'Blue', 'Yellow', 'Green', 'Pink', 'Purple', 'White', 'Black'];
+// ── Large keychains add-on (฿15): 22 items from images/large_keychains_15/
+const LARGE_KC_FILES = [
+  'IMG_1547','IMG_1549','IMG_1550','IMG_1551','IMG_1552','IMG_1553','IMG_1554',
+  'IMG_1555','IMG_1556','IMG_1557','IMG_1558','IMG_1559','IMG_1560','IMG_1561',
+  'IMG_1562','IMG_1563','IMG_1564','IMG_1565','IMG_1566','IMG_1567','IMG_1568',
+  'IMG_1569',
+];
+const LARGE_KC_EMOJIS = ['🔑','🏅','🎀','⚡','🌟','🦋','✨','💎','🌈','🍀','🎵','🎯','🔮','🌺','🦄','💫','🧸','🌻','🦊','🐻','🌙','⭐'];
+const LARGE_KEYCHAINS = LARGE_KC_FILES.map((file, i) => ({
+  id: `lk_${i + 1}`,
+  name: `Design ${i + 1}`,
+  image: `images/large_keychains_15/${file}.jpg`,
+  emoji: LARGE_KC_EMOJIS[i],
+  stock: 1,
+  price: 15,
+}));
+
+const ALL_SMALL_KEYCHAINS = [...SMALL_KEYCHAINS, ...LARGE_KEYCHAINS];
+
+// ── Recycled mini keychains: no images yet, emoji fallback ────────
+const RECYCLED_KC_EMOJIS = ['♻️','🌿','🌊','🍃','🌸','🌈','🦋','🌻'];
+const RECYCLED_AVAILABLE_COLORS = ['Red','Blue','Yellow','Green','Pink','Purple','White','Black'];
 const RECYCLED_KEYCHAINS = Array.from({ length: 8 }, (_, i) => ({
   id: `rk_${i + 1}`,
   name: `Design ${i + 1}`,
-  image: `images/recycled/${String(i + 1).padStart(2, '0')}.jpg`,
+  image: '',
   emoji: RECYCLED_KC_EMOJIS[i],
   stock: 5,
   price: 15,
@@ -166,7 +412,7 @@ let state = {
 function getStock(itemId) {
   if (state.stock[itemId] !== undefined) return state.stock[itemId];
   const allVariants = L_ITEMS.flatMap(i => i.variants);
-  const allItems = [...ROPE_COLORS, ...CLASP_COLORS, ...allVariants, ...S_DECOS, ...SMALL_KEYCHAINS, ...RECYCLED_KEYCHAINS];
+  const allItems = [...ROPE_COLORS, ...CLASP_COLORS, ...allVariants, ...S_DECOS, ...ALL_SMALL_KEYCHAINS, ...RECYCLED_KEYCHAINS];
   return allItems.find(i => i.id === itemId)?.stock ?? 99;
 }
 
@@ -360,7 +606,13 @@ function renderLetterSelect() {
 }
 
 function addLItem(id) {
+  const slotIdx = state.lItems.length;
   state.lItems.push(id);
+  // Auto-select the color if only 1 variant exists (e.g. L-deco designs)
+  const item = L_ITEMS.find(i => i.id === id);
+  if (item && item.variants.length === 1) {
+    state.lItemColors[slotIdx] = item.variants[0].id;
+  }
   renderStep(4);
 }
 
@@ -568,8 +820,8 @@ function toggleRecycledColor(itemId, color) {
 }
 
 // ── Step 7: Mini Keychain add-on ──────────────────────────────────
-function renderSmallKc() {
-  const cells = SMALL_KEYCHAINS.map(item => {
+function renderKcCards(items) {
+  return items.map(item => {
     const qty   = state.smallKc[item.id] || 0;
     const avail = getStock(item.id);
     return `
@@ -589,12 +841,17 @@ function renderSmallKc() {
       </div>
     `;
   }).join('');
+}
+
+function renderSmallKc() {
   return `
     <div class="step-page">
       <h2>Mini Keychain Add-On</h2>
-      <p class="step-desc">Optional. ฿10 each. Add as many as you like.</p>
-      <div class="img-grid">${cells}</div>
-      <p class="hint-next">Skip this step by clicking Next.</p>
+      <p class="step-desc">Optional. Add as many as you like. Skip by clicking Next.</p>
+      <div class="kc-section-label">Small &nbsp;•&nbsp; ฿10 each</div>
+      <div class="img-grid">${renderKcCards(SMALL_KEYCHAINS)}</div>
+      <div class="section-divider">Large &nbsp;•&nbsp; ฿15 each</div>
+      <div class="img-grid">${renderKcCards(LARGE_KEYCHAINS)}</div>
     </div>
   `;
 }
@@ -676,7 +933,7 @@ function renderSummary() {
   }).join('');
 
   const skRows = Object.entries(state.smallKc).filter(([, q]) => q > 0).map(([id, qty]) => {
-    const item = SMALL_KEYCHAINS.find(k => k.id === id);
+    const item = ALL_SMALL_KEYCHAINS.find(k => k.id === id);
     return `<tr><td>${item?.emoji} ${item?.name} (mini keychain)</td><td>×${qty} — ฿${qty * 10}</td></tr>`;
   }).join('');
 
@@ -899,8 +1156,12 @@ function getPriceBreakdown() {
   const totalSQty = Object.values(state.sDecos).reduce((s, q) => s + q, 0);
   const extraS = Math.max(0, totalSQty - PRICING.FREE_S);
   if (extraS > 0) extras.push({ label: `${extraS} extra S-Deco`, cost: calcExtraSCost(extraS) });
+  const kcCost = Object.entries(state.smallKc).filter(([, q]) => q > 0).reduce((sum, [id, qty]) => {
+    const item = ALL_SMALL_KEYCHAINS.find(k => k.id === id);
+    return sum + (item?.price ?? PRICING.smallKc) * qty;
+  }, 0);
   const totalSKc = Object.values(state.smallKc).reduce((s, q) => s + q, 0);
-  if (totalSKc > 0) extras.push({ label: `${totalSKc}× Mini Keychain`, cost: totalSKc * PRICING.smallKc });
+  if (totalSKc > 0) extras.push({ label: `${totalSKc}× Mini Keychain`, cost: kcCost });
   if (state.recycledKc.length > 0) extras.push({ label: `${state.recycledKc.length}× Recycled Keychain`, cost: state.recycledKc.length * PRICING.recycledKc });
   return { base: PRICING.base, extras };
 }
@@ -1032,7 +1293,7 @@ async function submitOrder() {
     .map(([id, qty]) => `${S_DECOS.find(s => s.id === id)?.name}×${qty}`).join(', ');
 
   const skSummary = Object.entries(state.smallKc).filter(([, q]) => q > 0)
-    .map(([id, qty]) => `${SMALL_KEYCHAINS.find(k => k.id === id)?.name}×${qty}`).join(', ') || 'none';
+    .map(([id, qty]) => `${ALL_SMALL_KEYCHAINS.find(k => k.id === id)?.name}×${qty}`).join(', ') || 'none';
 
   const freeRkSummary = state.freeRecycledKc
     ? `[FREE] ${RECYCLED_KEYCHAINS.find(k => k.id === state.freeRecycledKc.id)?.name}(${state.freeRecycledKc.colors.join('+')})`

@@ -156,6 +156,7 @@ main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 5rem; flex: 1; wid
 }
 .free-badge { background: #7dcaac; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 8px; white-space: nowrap; }
 .section-divider { font-size: 0.9rem; font-weight: 700; color: #3a7abf; margin: 1.25rem 0 0.75rem; border-top: 1px solid #e0eef8; padding-top: 1rem; }
+.kc-section-label { font-size: 0.9rem; font-weight: 700; color: #3a7abf; margin: 0 0 0.75rem; }
 .recycled-card.free-selected { border-color: #7dcaac; background: #f0fbf6; }
 .recycled-card.free-selected .img-label { color: #1a5c42; }
 
